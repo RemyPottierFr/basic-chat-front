@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messaging</title>
+    <link href="index.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <h1>Messaging :</h1><hr>
+    <div class="request">
+        <div class="getMessages">
+            <button id="messages">Show messages !</button>
+        </div>
+        <div class="getUsers">
+            <button id="users">Show users !</button>
+        </div>
+        <div class="setMessage" id="setMessage">
+            <form id="formMessage">
+                <label for="setmessage">Message to add !</label>
+                <input type="text" id="setmessage" name="content" placeholder="Add a text">
+                <select id="setOptions" name="userId"></select>
+                <input type="submit" value="Valider">
+            </form>
+        </div>
+        <div class="deleteMessage" id="deleteMessage">
+            <form id="formDelete">
+                <label for="idMessage">ID of message to deleted !</label>
+                <input type="number" id="idMessage" name="idMessage" min="1">
+                <input type="submit" value="Valider">
+            </form>
+        </div>
+    </div>
+    <hr>
+    <script type="module" id="add_message" src="./index.js"></script>
+</body>
+</html>
