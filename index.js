@@ -1,13 +1,21 @@
+// LOCAL ONLY
+// const baseApi = "http://localhost:3000"
+
+// PRODUCTION ONLY
+const baseApi = "https://basic-chat-api.herokuapp.com"
+
+async function customFetch(url, props = {}){
+    return await fetch(baseApi+url, {mode:"cors", ...props})
+}
+
 async function  getMessages() {
-    const result = await fetch("http://localhost:3000/messages")
-    const messages = await result.json();
-    return messages
+    const result = await customFetch("/messages")
+    return await result.json()
 }
 
 async function  getUsers() {
-    const result = await fetch("http://localhost:3000/users")
-    const users = await result.json();
-    return users
+    const result = await customFetch("/users")
+    return await result.json()
 }
 
 async function makeListMessages(listContainer, listElement) {
@@ -102,8 +110,8 @@ window.addEventListener("DOMContentLoaded", () => {
         const element = document.querySelector("#formMessage");
         element.addEventListener("submit", function (event) {
             event.preventDefault();
-    
-        fetch('http://localhost:3000/message', {
+
+        customFetch('/message', {
             method: 'POST',
             body: JSON.stringify(Object.fromEntries(new FormData(event.target))),
             headers: {
@@ -130,7 +138,7 @@ window.addEventListener("DOMContentLoaded", () => {
         event.preventDefault();
         const id = document.querySelector("#idMessage");
         console.log(id.value)
-        const result = await fetch("http://localhost:3000/message/" + id.value, {method: "DELETE"})
+        const result = await customFetch("/message/" + id.value, {method: "DELETE"})
         id.value = "";
     })
 })
