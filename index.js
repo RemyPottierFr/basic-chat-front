@@ -37,33 +37,13 @@ async function makeListUsers(listContainer, listElement, users) {
     })
 }
 
-let actionUsers = false;
-
 window.addEventListener("DOMContentLoaded", async (event) => {
     const users = await getUsers()
 
-    let actionM;
     const listContainerMessages = document.createElement('div');
     const listElementMessages = document.createElement('ul');
     const elementMessages = document.querySelector("#messages");
     makeListMessages(listContainerMessages, listElementMessages, users);
-
-    const listContainer = document.createElement('div');
-    const listElement = document.createElement('ul');
-
-    const elementUsers = document.querySelector("#users");
-    elementUsers.addEventListener("click", async function (event) {
-            event.preventDefault();
-            if (actionUsers) {
-                listElement.innerHTML = ""
-                elementUsers.innerHTML = "Show users !"
-            } else {
-                makeListUsers(listContainer, listElement, users)
-                elementUsers.innerHTML = "Hidden users !"
-            }
-            actionUsers = !actionUsers
-        }
-    );
 });
 
 window.addEventListener("DOMContentLoaded", async () => {
