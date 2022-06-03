@@ -31,19 +31,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const listContainer = document.createElement('div');
     const listElement = document.createElement('ul');
     const element = document.querySelector("#messages");
-    element.addEventListener("click",
-         function (event) {
-            event.preventDefault();
-            if (!actionM) {
-                makeListMessages(listContainer, listElement);
-                element.innerHTML = "Hidden messages !"
-            } else {
-                listElement.innerHTML = ""
-                element.innerHTML = "Show messages !"
-            }
-            return actionM = !actionM
-        }
-    );
+    makeListMessages(listContainer, listElement);
 });
 
 async function makeListUsers(listContainer, listElement) {
