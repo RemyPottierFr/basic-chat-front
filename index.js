@@ -18,14 +18,14 @@ async function  getUsers() {
     return await result.json()
 }
 
-async function makeListMessages(listContainer, listElement) {
+async function makeListMessages(listContainer, listElement, users) {
     const messages = await getMessages()
     listContainer.appendChild(listElement);
     document.body.appendChild(listContainer);
 
     messages.forEach((message) => {
         const listItem = document.createElement('li');
-        listItem.innerHTML = `${message.content} (id -> ${message.id})`;
+        listItem.innerHTML = `${message.lastname} ${message.firstname} -> ${message.content}`;
         listElement.appendChild(listItem);
         const btSuppr = document.createElement('button');
         btSuppr.addEventListener("click", function () {
@@ -34,28 +34,7 @@ async function makeListMessages(listContainer, listElement) {
     })
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-    let actionM;
-    const listContainer = document.createElement('div');
-    const listElement = document.createElement('ul');
-    const element = document.querySelector("#messages");
-    element.addEventListener("click",
-         function (event) {
-            event.preventDefault();
-            if (!actionM) {
-                makeListMessages(listContainer, listElement);
-                element.innerHTML = "Hidden messages !"
-            } else {
-                listElement.innerHTML = ""
-                element.innerHTML = "Show messages !"
-            }
-            return actionM = !actionM
-        }
-    );
-});
-
-async function makeListUsers(listContainer, listElement) {
-    const users = await getUsers()
+async function makeListUsers(listContainer, listElement, users) {
     document.body.appendChild(listContainer);
     listContainer.appendChild(listElement);
 
@@ -66,29 +45,14 @@ async function makeListUsers(listContainer, listElement) {
     })
 }
 
-let actionUsers = false;
-
 window.addEventListener("DOMContentLoaded", async (event) => {
+    const users = await getUsers()
 
-    const listContainer = document.createElement('div');
-    const listElement = document.createElement('ul');
-
-    const element = document.querySelector("#users");
-    element.addEventListener("click", async function (event) {
-            event.preventDefault();
-            if (actionUsers) {
-                listElement.innerHTML = ""
-                element.innerHTML = "Show users !"
-            } else {
-                makeListUsers(listContainer, listElement)
-                element.innerHTML = "Hidden users !"
-            }
-            actionUsers = !actionUsers
-        }
-    );
+    const listContainerMessages = document.createElement('div');
+    const listElementMessages = document.createElement('ul');
+    const elementMessages = document.querySelector("#messages");
+    makeListMessages(listContainerMessages, listElementMessages, users);
 });
-
-let longUs = getUsers;
 
 window.addEventListener("DOMContentLoaded", async () => {
     const users = await getUsers();
