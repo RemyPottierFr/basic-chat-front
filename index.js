@@ -17,12 +17,14 @@ async function makeListMessages(listContainer, listElement, users) {
 
     messages.forEach((message) => {
         const listItem = document.createElement('li');
-        listItem.innerHTML = `${message.lastname} ${message.firstname} -> ${message.content}`;
+        listItem.innerHTML = `${message.lastname} ${message.firstname} -> ${message.content} `;
         listElement.appendChild(listItem);
-        const btSuppr = document.createElement('button');
-        btSuppr.addEventListener("click", function () {
-
-        })
+        const btDelete = document.createElement("button");
+        btDelete.innerHTML = "DELETE"
+        btDelete.onclick = async function() {
+            const result = await fetch("http://localhost:3000/message/" + message.id, {method: "DELETE"})
+        }
+        listItem.appendChild(btDelete)
     })
 }
 
@@ -85,16 +87,4 @@ window.addEventListener("DOMContentLoaded", () => {
             console.warn(error);
         });
         })
-})
-
-window.addEventListener("DOMContentLoaded", () => {
-    const element = document.querySelector("#formDelete");
-
-    element.addEventListener("submit", async function (event) {
-        event.preventDefault();
-        const id = document.querySelector("#idMessage");
-        console.log(id.value)
-        const result = await fetch("http://localhost:3000/message/" + id.value, {method: "DELETE"})
-        id.value = "";
-    })
 })
