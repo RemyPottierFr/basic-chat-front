@@ -1,90 +1,71 @@
-async function  getMessages() {
+async function getMessages() {
     const result = await fetch("http://localhost:3000/messages")
     const messages = await result.json();
     return messages
 }
 
-async function  getUsers() {
+async function getUsers() {
     const result = await fetch("http://localhost:3000/users")
     const users = await result.json();
     return users
 }
 
-async function makeListMessages(listContainer, listElement, users) {
+async function makeListMessages() {
     const messages = await getMessages()
-    listContainer.appendChild(listElement);
-    document.body.appendChild(listContainer);
+    const listContainer = document.querySelector("#list")
+    // Reset container
+    listContainer.innerHTML = ""
 
+    // Create list of messages
     messages.forEach((message) => {
-        const listItem = document.createElement('li');
-        listItem.innerHTML = `${message.lastname} ${message.firstname} -> ${message.content} `;
-        listElement.appendChild(listItem);
+        const listElement = document.createElement('li');
+        listElement.innerHTML = `<span>${message.lastname} ${message.firstname} -> ${message.content} </span>`;
         const btDelete = document.createElement("button");
         btDelete.innerHTML = "DELETE"
-        btDelete.onclick = async function() {
-            const result = await fetch("http://localhost:3000/message/" + message.id, {method: "DELETE"})
+        btDelete.onclick = async () => {
+            await fetch("http://localhost:3000/message/" + message.id, { method: "DELETE" })
+            makeListMessages();
         }
-        listItem.appendChild(btDelete)
+        listElement.appendChild(btDelete)
+        listContainer.appendChild(listElement);
     })
 }
-
-async function makeListUsers(listContainer, listElement, users) {
-    document.body.appendChild(listContainer);
-    listContainer.appendChild(listElement);
-
-    users.forEach(({firstname, lastname}) => {
-        const listItem = document.createElement('li');
-        listItem.innerHTML = `${lastname} ${firstname}`;
-        listElement.appendChild(listItem);
-    })
-}
-
-window.addEventListener("DOMContentLoaded", async (event) => {
-    const users = await getUsers()
-
-    const listContainerMessages = document.createElement('div');
-    const listElementMessages = document.createElement('ul');
-    const elementMessages = document.querySelector("#messages");
-    makeListMessages(listContainerMessages, listElementMessages, users);
-});
 
 window.addEventListener("DOMContentLoaded", async () => {
+    // Get users
     const users = await getUsers();
-    let element = document.getElementById("setOptions");
+    const select = document.getElementById("setOptions");
 
-    users.forEach(({id, firstname, lastname})=> {
-        let opt = document.createElement("option");
+    // Create user list
+    users.forEach(({ id, firstname, lastname }) => {
+        const opt = document.createElement("option");
         opt.value = id;
         opt.text = `${firstname} ${lastname}`;
-        element.add(opt, null);
+        select.add(opt, null);
     })
 
-    element.addEventListener("onchange",(event) => {
-        let curentUser = event.target.value;
-    })
-});
+    // Add form submit event
+    const form = document.querySelector("#formMessage");
+    form.addEventListener("submit", function (event) {
+        const { target } = event
+        event.preventDefault();
 
-window.addEventListener("DOMContentLoaded", () => {
-        const element = document.querySelector("#formMessage");
-        element.addEventListener("submit", function (event) {
-            event.preventDefault();
-    
         fetch('http://localhost:3000/message', {
             method: 'POST',
-            body: JSON.stringify(Object.fromEntries(new FormData(event.target))),
+            body: JSON.stringify(Object.fromEntries(new FormData(target))),
             headers: {
                 'Content-type': 'application/json; charset=UTF-8'
             }
         }).then(function (response) {
             if (response.ok) {
-                event.target.reset();
+                target.reset();
+                makeListMessages();
                 return response.json();
             }
             return Promise.reject(response);
-        }).then(function (data) {
-            console.log(data);
-        }).catch(function (error) {
-            console.warn(error);
         });
-        })
+    })
+
+    // Create message list at initialisation
+    makeListMessages();
 })
